@@ -3,23 +3,31 @@
 class LoginPage
   include PageObject
   include PageFactory
+  require 'rautomation'
   require 'rspec/matchers'
   require 'rspec/expectations'
   require 'roo/excelx/sheet'
+  include RAutomation::Adapter
 
 
   text_field :username,  id: 'j_username'
   text_field :password,  id: 'j_password'
   link :sign_in, name: 'SignIn'
   link :iphone, text: 'iPhone 5'
+  file_field :photo, id: 'photo'
   def login_page
     # self.username = 'admin'
     # self.password = 'apollo'
     # self.sign_in
-    self.class.link(:product_category, text: 'Product Category')
-    self.product_category_element.hover
-    self.class.link(:test1, href: 'http://store.demoqa.com/products-page/product-category/accessories/')
-    wait_until {self.test1_element.present?}
+    # self.class.link(:product_category, text: 'Product Category')
+    # self.product_category_element.hover
+    # self.class.link(:test1, href: 'http://store.demoqa.com/products-page/product-category/accessories/')
+    # wait_until {self.test1_element.present?}
+    wait_until {self.photo?}
+    self.photo_element.click
+    window = RAutomation::Window.new(title: /Open/i, adapter: :ms_uia)
+    window.activate
+    puts "Window available" if window.present?
     self.test1
     wait_until {self.iphone_element.present?}
     self.iphone

@@ -1,6 +1,6 @@
 Before do
   @browser = Watir::Browser.new :chrome
-  @browser.goto 'http://store.demoqa.com/'
+  @browser.goto 'http://toolsqa.com/automation-practice-form/'
   @browser.window.maximize
 end
 

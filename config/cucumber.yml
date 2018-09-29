@@ -1,2 +1,2 @@
-default: --profile html_report
-html_report: --format pretty --format html --out = features_report.html
+default: --format pretty --out features_report.html
+
