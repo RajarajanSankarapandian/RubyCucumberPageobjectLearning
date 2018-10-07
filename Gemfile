@@ -19,7 +19,10 @@ gem 'watir-scroll'
 gem 'json'
 gem 'write_xlsx'
 gem 'rubocop'
-
+gem 'require_all'
+gem 'pry'
+gem 'report_builder'
+gem 'ffi' ,'1.9.24'
 # gem to connect to saucelabs and also dynamically change browser parameters
 gem 'saucelabs'
 
