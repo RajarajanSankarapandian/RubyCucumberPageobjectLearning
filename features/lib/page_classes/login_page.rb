@@ -4,7 +4,8 @@ class LoginPage
   require 'rspec/expectations'
   require 'roo'
 
-  page_url 'https://www.saucedemo.com'
+  # Falls back to the real site when the mock server is not running
+  page_url defined?(MOCK_SERVER_URL) ? MOCK_SERVER_URL : 'https://www.saucedemo.com'
 
   text_field :username, id: 'user-name'
   text_field :password, id: 'password'

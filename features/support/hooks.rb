@@ -6,19 +6,23 @@ Before do
   options.add_argument('--disable-gpu')
   options.add_argument('--window-size=1280,900')
 
-  # Point to a local Chromium binary when CHROME_BIN env var is set (e.g. CI)
+  # Use CHROME_BIN when set (e.g. CI); falls back to system Chrome on PATH
   options.binary = ENV['CHROME_BIN'] if ENV['CHROME_BIN']
 
-  @browser = Watir::Browser.new(:chrome, options: options)
+  # Use CHROMEDRIVER_PATH when set; lets Selenium Manager handle it otherwise
+  service_args = {}
+  service_args[:path] = ENV['CHROMEDRIVER_PATH'] if ENV['CHROMEDRIVER_PATH']
+  service = Selenium::WebDriver::Chrome::Service.new(**service_args)
+
+  @browser = Watir::Browser.new(:chrome, options: options, service: service)
 end
 
 After do |scenario|
   if @browser
-    if scenario.failed?
-      screenshot_path = "error_screenshot_#{scenario.name.gsub(/\s+/, '_')}.png"
-      @browser.screenshot.save screenshot_path
-      attach(@browser.screenshot.base64, 'image/png')
-    end
+    # Always capture the final state; embed into the HTML report
+    screenshot_path = "screenshot_#{scenario.name.gsub(/\s+/, '_')}.png"
+    @browser.screenshot.save screenshot_path
+    attach(@browser.screenshot.base64, 'image/png')
     @browser.close
   end
 end

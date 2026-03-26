@@ -19,3 +19,10 @@ gem 'require_all',       '~> 3.0'
 gem 'pry',               '~> 0.15'
 gem 'ffi'
 gem 'csv'
+
+gem "sinatra", "~> 4.2"
+gem "rack", "~> 3.2"
+
+gem "rackup", "~> 2.3"
+
+gem "webrick", "~> 1.9"
