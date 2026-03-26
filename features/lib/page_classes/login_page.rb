@@ -1,64 +1,42 @@
-# Page class for storing elements of LoginPage
 class LoginPage
   include PageObject
-  include PageFactory
-  require 'rautomation'
   require 'rspec/matchers'
   require 'rspec/expectations'
-  require 'roo/excelx/sheet'
-  include RAutomation
+  require 'roo'
 
+  # Falls back to the real site when the mock server is not running
+  page_url defined?(MOCK_SERVER_URL) ? MOCK_SERVER_URL : 'https://www.saucedemo.com'
 
-  text_field :username, id: 'j_username'
-  text_field :password, id: 'j_password'
-  link :sign_in, name: 'SignIn'
-  link :iphone, text: 'iPhone 5'
-  file_field :photo, id: 'photo'
-  link :add_to_card, title: 'Add to cart'
-  link :quick, {text: 'Quick view'}
-  img :tshirt, src: 'http://automationpractice.com/img/p/1/1-home_default.jpg'
-  link :women, text: 'Women'
-  link :tshirts, text: 'T-shirts'
+  text_field :username, id: 'user-name'
+  text_field :password, id: 'password'
+  button     :login_button, id: 'login-button'
+  div        :error_container, css: "[data-test='error']"
 
-  def login_page
-    # self.username = 'admin'
-    # self.password = 'apollo'
-    # self.sign_in
-    # self.class.link(:product_category, text: 'Product Category')
-    # self.product_category_element.hover
-    # self.class.link(:test1, href: 'http://store.demoqa.com/products-page/product-category/accessories/')
-    # wait_until {self.test1_element.present?}
-    # wait_until {self.photo?}
-    # self.photo_element.click
-    # window = RAutomation::Window.new(title: /Open/)
-    # window.activate
-    # puts "Window available" if window.present?
-    # self.test1
-    # wait_until {self.iphone_element.present?}
-    # self.iphone
-    self.tshirt_element.wait_until(&:present?)
-    self.tshirt_element.hover
-    wait_until {self.add_to_card?}
-    self.add_to_card
-    puts "Cart Added"
-    self.women_element.hover
-    self.women
-    self.women_element.hover
-    self.tshirts
-    self.quick if self.quick?
-    puts "clicked quick button"
-    sleep 3
+  def login(user, pass)
+    self.username = user
+    self.password = pass
+    self.login_button
   end
 
-  def excel
-    #xlsx = Roo::Spreadsheet.open('data/data1.xlsx')
-    #xlsx = Spreadsheet::Worksheet.new
-    xlsx = Roo::Excelx.new('data/data1.xlsx')
-    sheet = xlsx.sheet('Sheet1').column(1)
-    puts sheet
-    test = xlsx.sheet(0).cell(1, 1)
-    puts test
-    puts 'Pass' if test.include?('Name')
-    xlsx.each_row_streaming {|row| puts row}
+  def login_with_valid_credentials
+    login('standard_user', 'secret_sauce')
+  end
+
+  def login_with_invalid_credentials
+    login('invalid_user', 'wrong_password')
+  end
+
+  def error_displayed?
+    error_container_element.present?
+  end
+
+  def excel_data
+    xlsx = Roo::Spreadsheet.open('data/data1.xlsx')
+    sheet = xlsx.sheet(0)
+    puts "Reading Excel data:"
+    sheet.each_row_streaming do |row|
+      puts row.map(&:value).join(', ')
+    end
+    sheet.cell(1, 1)
   end
 end

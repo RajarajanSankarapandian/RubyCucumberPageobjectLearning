@@ -1,1 +1,1 @@
-default: --color --format pretty --format html --out features_report.html
+default: --color --format progress --format html --out features_report.html
