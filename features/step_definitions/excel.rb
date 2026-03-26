@@ -1,17 +1,17 @@
-
 require 'roo'
-require 'roo/excelx/sheet'
 
-def excel_test
-  #xlsx = Roo::Spreadsheet.open('data/data1.xlsx')
-  #xlsx = Spreadsheet::Worksheet.new
-  xlsx = Roo::Excelx.new('data/data1.xlsx')
-  sheet = xlsx.sheet('Sheet1').column(1)
-  puts sheet
-  test = xlsx.sheet(0).cell(1, 1)
-  puts test
-  puts 'Pass' if test.include?('Name')
-  xlsx.each_row_streaming do |row|
-    puts row
+def excel_test(file_path = 'data/data1.xlsx')
+  xlsx = Roo::Spreadsheet.open(file_path)
+  sheet = xlsx.sheet(0)
+
+  first_cell = sheet.cell(1, 1).to_s
+  puts "First cell value: #{first_cell}"
+  puts 'Pass' if first_cell.include?('Name')
+
+  puts "All rows:"
+  sheet.each_row_streaming do |row|
+    puts row.map(&:value).join(', ')
   end
+
+  first_cell
 end

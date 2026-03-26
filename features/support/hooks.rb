@@ -1,20 +1,12 @@
 Before do
   @browser = Watir::Browser.new :chrome
-  @browser.goto 'http://automationpractice.com/index.php'
-#  @browser.goto 'http://toolsqa.com/automation-practice-form/'
-  @browser.window.maximize
 end
 
-
 After do |scenario|
-
   if scenario.failed?
-    @browser.screenshot.save "error_screenshot.png"
-    encod_img = @browser.screenshot.base64
-    embed("data:image/png;base64,#{encod_img}",'image/png')
-    @browser.close
+    screenshot_path = "error_screenshot_#{scenario.name.gsub(/\s+/, '_')}.png"
+    @browser.screenshot.save screenshot_path
+    attach(@browser.screenshot.base64, 'image/png')
   end
-  end
-
-
-
+  @browser.close
+end
